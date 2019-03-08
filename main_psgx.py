@@ -2,6 +2,8 @@ import xmltodict
 import os
 from pymongo import MongoClient
 import time
+import datetime
+
 class Equipe:
     def __init__(self,country,country_id,country_iso,region_id,region_name,short_club_name,uID,web_address,Founded,Name,SYMID,StadiumuID,Capacity,StadiumName,TeamKits,Players,TeamOfficials):
         self.country=country
@@ -61,12 +63,12 @@ class Match:
         self.away_team_name=away_team_name
         self.competition_id=competition_id
         self.competition_name=competition_name
-        self.game_date=game_date
+        self.game_date=datetime.datetime.strptime(game_date.split(".")[0],"%Y-%m-%dT%H:%M:%S")
         self.home_team_id=home_team_id
         self.home_team_name=home_team_name
         self.matchday=matchday
-        self.period_1_start=period_1_start
-        self.period_2_start=period_2_start
+        self.period_1_start=datetime.datetime.strptime(period_1_start.split(".")[0],"%Y-%m-%dT%H:%M:%S")
+        self.period_2_start=datetime.datetime.strptime(period_2_start.split(".")[0],"%Y-%m-%dT%H:%M:%S")
         self.season_id=season_id
         self.season_name=season_name
         self.Events=Events
@@ -87,8 +89,8 @@ class Event:
         self.outcome=outcome
         self.x=x
         self.y=y
-        self.timestamp=timestamp
-        self.last_modified=last_modified
+        self.timestamp=datetime.datetime.strptime(timestamp.split(".")[0],"%Y-%m-%dT%H:%M:%S")
+        self.last_modified=datetime.datetime.strptime(last_modified.split(".")[0],"%Y-%m-%dT%H:%M:%S")
         self.version=version
         self.Qs=Qs
     def __repr__(self):
@@ -172,14 +174,15 @@ def ParseXMLToClassEvent(xml):
                 if 'Q' in e:
                     if isinstance(e['Q'],list):
                         for q in e['Q']:
-                            Qs.append(Qualifier(q['@id'],q['@qualifier_id'],q['@value'] if '@value' in q else '').__dict__)
+                            Qs.append(Qualifier(int(q['@id']),int(q['@qualifier_id']),q['@value'] if '@value' in q else '').__dict__)
                     else:
-                        Qs=Qualifier(e['Q']['@id'],e['Q']['@qualifier_id'],e['Q']['@value'] if '@value' in e['Q'] else '').__dict__
+                        Qs=Qualifier(int(e['Q']['@id']),int(e['Q']['@qualifier_id']),e['Q']['@value'] if '@value' in e['Q'] else '').__dict__
                 else:
                     Qs=''
-                Events.append(Event(e['@id'],e['@event_id'],e['@type_id'],e['@period_id'],e['@min'],e['@sec'],e['@player_id'] if '@player_id' in e else '',e['@team_id'],e['@outcome'],e['@x'],e['@y'],e['@timestamp'],e['@last_modified'],e['@version'] if '@version' in e else '',Qs).__dict__)
-            games.append(Match(doc['Games']['Game']['@id'],doc['Games']['Game']['@away_team_id'],doc['Games']['Game']['@away_team_name'],doc['Games']['Game']['@competition_id'],doc['Games']['Game']['@competition_name'],doc['Games']['Game']['@game_date'],doc['Games']['Game']['@home_team_id'],doc['Games']['Game']['@home_team_name'],doc['Games']['Game']['@matchday'],doc['Games']['Game']['@period_1_start'],doc['Games']['Game']['@period_2_start'],doc['Games']['Game']['@season_id'],doc['Games']['Game']['@season_name'],Events).__dict__)
+                Events.append(Event(int(e['@id']),int(e['@event_id']),int(e['@type_id']),int(e['@period_id']),int(e['@min']),int(e['@sec']),int(e['@player_id']) if '@player_id' in e else '',int(e['@team_id']),int(e['@outcome']),float(e['@x']),float(e['@y']),e['@timestamp'],e['@last_modified'],e['@version'] if '@version' in e else '',Qs).__dict__)
+            games.append(Match(int(doc['Games']['Game']['@id']),int(doc['Games']['Game']['@away_team_id']),doc['Games']['Game']['@away_team_name'],int(doc['Games']['Game']['@competition_id']),doc['Games']['Game']['@competition_name'],doc['Games']['Game']['@game_date'],int(doc['Games']['Game']['@home_team_id']),doc['Games']['Game']['@home_team_name'],doc['Games']['Game']['@matchday'],doc['Games']['Game']['@period_1_start'],doc['Games']['Game']['@period_2_start'],int(doc['Games']['Game']['@season_id']),doc['Games']['Game']['@season_name'],Events).__dict__)
     return games
+    
 start_time = time.time()
 gameCollection = MongoClient('mongodb://localhost:27017/')['PSG']['games']
 teamCollection = MongoClient('mongodb://localhost:27017/')['PSG']['teams']
