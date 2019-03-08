@@ -12,7 +12,7 @@ sampleID=random.choice(listID)
 period=random.choice(['period_1_start','period_2_start'])
 dateMatch=gameCollection.find_one({"_id":sampleID['_id']},{period:1,"_id":0})[period]
 start=dateMatch+timedelta(minutes=deb)
-end=dateMatch+timedelta(minutes=deb+2)
+end=dateMatch+timedelta(minutes=deb+15)
 sample=list(gameCollection.find({ "_id":sampleID['_id']}))[0]
 homeId=sample["home_team_id"]
 awayId=sample["away_team_id"]
@@ -56,5 +56,7 @@ for i,event in enumerate(sample['Events']):
         q["id"]=0
         q["qualifier_id"]="" if q["qualifier_id"]  in [140,141] or i+10<len(sample['Events']) else q["qualifier_id"]
         q["value"]="" if i+10<len(sample['Events']) else q["value"]
+
 sampleCollection = MongoClient('mongodb://localhost:27017/')['PSG']['sample']
+sampleCollection.drop()
 sampleCollection.insert_one(sample)
