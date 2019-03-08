@@ -1,7 +1,7 @@
 import xmltodict
 import os
 from pymongo import MongoClient
-
+import time
 class Equipe:
     def __init__(self,country,country_id,country_iso,region_id,region_name,short_club_name,uID,web_address,Founded,Name,SYMID,StadiumuID,Capacity,StadiumName,TeamKits,Players,TeamOfficials):
         self.country=country
@@ -180,15 +180,19 @@ def ParseXMLToClassEvent(xml):
                 Events.append(Event(e['@id'],e['@event_id'],e['@type_id'],e['@period_id'],e['@min'],e['@sec'],e['@player_id'] if '@player_id' in e else '',e['@team_id'],e['@outcome'],e['@x'],e['@y'],e['@timestamp'],e['@last_modified'],e['@version'] if '@version' in e else '',Qs).__dict__)
             games.append(Match(doc['Games']['Game']['@id'],doc['Games']['Game']['@away_team_id'],doc['Games']['Game']['@away_team_name'],doc['Games']['Game']['@competition_id'],doc['Games']['Game']['@competition_name'],doc['Games']['Game']['@game_date'],doc['Games']['Game']['@home_team_id'],doc['Games']['Game']['@home_team_name'],doc['Games']['Game']['@matchday'],doc['Games']['Game']['@period_1_start'],doc['Games']['Game']['@period_2_start'],doc['Games']['Game']['@season_id'],doc['Games']['Game']['@season_name'],Events).__dict__)
     return games
-
+start_time = time.time()
 gameCollection = MongoClient('mongodb://localhost:27017/')['PSG']['games']
 teamCollection = MongoClient('mongodb://localhost:27017/')['PSG']['teams']
 equipes=ParseXmlToClassTeam('Noms des joueurs et IDs - F40 - L1 20162017.xml')
+print("XML Teams+Joueurs Parsé en Classe Python --- %s seconds ---" % (time.time() - start_time))
 for equipe in equipes:
     teamCollection.insert_one(equipe)
+print("Classe Python Team+Joueurs inséré en BDD MongoDB --- %s seconds ---" % (time.time() - start_time))
 for file in os.listdir("./data"):
     games=ParseXMLToClassEvent('./data/'+file)
-    print("fini")
-    print(file)
+    print("XML d'un Match Parsé en Classe Python --- %s seconds ---" % (time.time() - start_time))
     for game in games:
         gameCollection.insert_one(game)
+    print("Classe Python d'un match inséré en base --- %s seconds ---" % (time.time() - start_time))
+print("FIN --- %s seconds ---" % (time.time() - start_time))
+

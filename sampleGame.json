@@ -1,0 +1,76 @@
+{
+    "id":"1234",
+    "away_team_id":"1234",
+    "away_team_name":"ABCD",
+    "competition_id":"1234",
+    "competition_name":"ABCD",
+    "game_date":"2016-08-14T14:00:25",
+    "home_team_id":"1234",
+    "home_team_name":"ABCD",
+    "matchday":"1",
+    "period_1_start":"2016-08-14T14:00:25",
+    "period_2_start":"2016-08-14T14:00:25",
+    "season_id":"1234",
+    "season_name":"ABCD",
+    "Events":[//Liste des événements du match
+        {
+            "id":"1234",
+            "event_id":"1234",
+            "type_id":"1234",
+            "period_id":"1234",
+            "min":"10",
+            "sec":"10",
+            "player_id":"1234",
+            "team_id":"1234",
+            "outcome":"1",
+            "x":"50",
+            "y":"50",
+            "timestamp":"2016-08-14T14:00:25",
+            "last_modified":"2016-08-14T14:00:25",
+            "version":"1234",
+            "Qs":[ //Liste de qualifier de l'événement
+                {
+                    "id":"1234",
+                    "qualifier_id":"1234",
+                    "value":"10"
+                },
+                {// Deuxième Qualifier
+                    "id":"1234",
+                    "qualifier_id":"1234",
+                    "value":"10"
+                },
+                {...} //d'autres qualifiers
+            ]
+        },
+        {//Deuxième évèenement
+            "id":"1234",
+            "event_id":"1234",
+            "type_id":"1234",
+            "period_id":"1234",
+            "min":"10",
+            "sec":"10",
+            "player_id":"1234",
+            "team_id":"1234",
+            "outcome":"1",
+            "x":"50",
+            "y":"50",
+            "timestamp":"2016-08-14T14:00:25",
+            "last_modified":"2016-08-14T14:00:25",
+            "version":"1234",
+            "Qs":[
+                {
+                    "id":"1234",
+                    "qualifier_id":"1234",
+                    "value":"10"
+                },
+                {
+                    "id":"1234",
+                    "qualifier_id":"1234",
+                    "value":"10"
+                },
+                {...} //d'autres qualifer
+            ]
+        },
+        {...} //d'autres événements
+    ]
+}

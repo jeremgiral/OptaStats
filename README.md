@@ -9,6 +9,8 @@
 docker build -t=mongodb . && docker run -p 27017:27017 mongodb
 ```
 
+- Ne pas oublier de télécharger les fichiers XML sources et de les dézipper dans un dossier nommé *'data'*
+
 - 4 - Dans une autre invite de commande (à la racine du projet) : 
 ```
 python main_psgx.py
